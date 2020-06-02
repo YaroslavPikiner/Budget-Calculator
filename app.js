@@ -46,7 +46,7 @@ const buggetController = (function () {
   };
 
   return {
-    addItem: function (type, des, val) {
+    addItem: (type, des, val) => {
       let newItem, ID;
 
       if (data.allItems[type].length > 0) {
@@ -65,7 +65,7 @@ const buggetController = (function () {
       return newItem;
     },
 
-    deleteItem: function (type, id) {
+    deleteItem: (type, id) => {
       const ids = data.allItems[type].map(function (current) {
         return current.id;
       });
@@ -76,7 +76,7 @@ const buggetController = (function () {
       }
     },
 
-    calculateBudget: function () {
+    calculateBudget: () => {
       // calculate total income and expenses
       calculateTotal("exp");
       calculateTotal("inc");
@@ -107,7 +107,7 @@ const buggetController = (function () {
       return allPerc;
     },
 
-    getBudget: function () {
+    getBudget: () => {
       return {
         budget: data.budget,
         totalInc: data.totals.inc,
@@ -116,13 +116,13 @@ const buggetController = (function () {
       };
     },
 
-    testing: function () {
+    testing: () => {
       console.log(data);
     },
   };
 })();
 
-const uiController = (function () {
+const uiController = (() => {
   const domStrings = {
     inputType: ".add__type",
     inputDescription: ".add__description",
@@ -135,11 +135,11 @@ const uiController = (function () {
     expenseLabel: ".budget__expenses--value",
     percentageLabel: ".budget__expenses--percentage",
     container: ".container",
-    titleMonth: ".budget__title--month"
+    titleMonth: ".budget__title--month",
   };
 
   return {
-    getInput: function () {
+    getInput: () => {
       return {
         type: document.querySelector(domStrings.inputType).value,
         description: document.querySelector(domStrings.inputDescription).value,
@@ -147,7 +147,7 @@ const uiController = (function () {
       };
     },
 
-    addListItem: function (obj, type) {
+    addListItem: (obj, type) => {
       var html, newHtml, element;
       // Create HTML string with placeholder text
 
@@ -167,18 +167,18 @@ const uiController = (function () {
       newHtml = html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
       newHtml = newHtml.replace("%value%", obj.value);
-      newHtml = newHtml.replace("%per%", obj.presentage)
+      newHtml = newHtml.replace("%per%", obj.presentage);
 
       // Insert the HTML into the DOM
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
 
-    deleteListItem: function (selectorID) {
+    deleteListItem: (selectorID) => {
       const el = document.getElementById(selectorID);
       el.parentNode.removeChild(el);
     },
 
-    clearFields: function () {
+    clearFields: () => {
       let fields, fieldsArr;
 
       fields = document.querySelectorAll(
@@ -191,8 +191,10 @@ const uiController = (function () {
       fieldsArr[0].focus();
     },
 
-    displayBudget: function (obj) {
-      document.querySelector(domStrings.budgedLabel).textContent = obj.budget.toFixed(2);
+    displayBudget: (obj) => {
+      document.querySelector(
+        domStrings.budgedLabel
+      ).textContent = obj.budget.toFixed(2);
       document.querySelector(domStrings.incomeLabel).textContent = obj.totalInc;
       document.querySelector(domStrings.expenseLabel).textContent =
         obj.totalExp;
@@ -201,42 +203,44 @@ const uiController = (function () {
         obj.percentage + "%";
     },
 
-    displayMonth: function() {
-      const now = new Date()
-      const year = now.getFullYear()
+    displayMonth: () => {
+      const now = new Date();
+      const year = now.getFullYear();
       const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'November',
-        'December',
-        ];
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "November",
+        "December",
+      ];
       const month = now.getMonth();
 
-      document.querySelector(domStrings.titleMonth).textContent = `${months[month]} ${year}`
+      document.querySelector(
+        domStrings.titleMonth
+      ).textContent = `${months[month]} ${year}`;
     },
 
-    getDomStrings: function () {
+    getDomStrings: () => {
       return domStrings;
     },
   };
 })();
 
-const controller = (function (bugCtrl, UiCtrl) {
-  let setupEventListener = function () {
+const controller = ((bugCtrl, UiCtrl) => {
+  let setupEventListener = () => {
     const DOM = UiCtrl.getDomStrings();
 
     document.querySelector(DOM.inputBtn).addEventListener("click", addCtrl);
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctrlDeleteItem);
-    document.addEventListener("keypress", function (event) {
+    document.addEventListener("keypress", (event) => {
       if (event.keyCode === 13 || event.which === 13) {
         addCtrl();
         uiController.clearFields();
@@ -258,7 +262,7 @@ const controller = (function (bugCtrl, UiCtrl) {
     console.log(prec);
   };
 
-  const addCtrl = function () {
+  const addCtrl =  () => {
     var input, newItem;
 
     // 1. Get the field input data
@@ -288,7 +292,7 @@ const controller = (function (bugCtrl, UiCtrl) {
   };
 
   return {
-    init: function () {
+    init: () => {
       console.log("Aplication has been startet");
       UiCtrl.displayMonth();
       UiCtrl.displayBudget({
